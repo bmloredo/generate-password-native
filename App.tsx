@@ -1,118 +1,82 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import React, {useState} from 'react';
+import Slider from '@react-native-community/slider';
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+let charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+export default function App() {
+  const [size, setSize] = useState(20);
+  const [passwordValue, setPasswordValue] = useState('');
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+  const generatePassword = () => {
+    let password = '';
 
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+    for (let i = 0, n = charset.length; i < size; i++) {
+      password += charset.charAt(Math.floor(Math.random() * n));
+    }
+
+    setPasswordValue(password);
+  };
+
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
+    <View style={style.container}>
+      <Image source={require('./assets/lock.png')} style={style.logo} />
+      <Text style={style.title}>{size} caracteres</Text>
+      <View style={style.areaSlider}>
+        <Slider
+          style={{height: 50}}
+          minimumValue={6}
+          maximumValue={20}
+          minimumTrackTintColor="#000"
+          maximumTrackTintColor="#ff0000"
+          thumbTintColor="#392de9"
+          value={size}
+          onValueChange={value => setSize(Number(value.toFixed(0)))}
+        />
+      </View>
+
+      <TouchableOpacity style={style.button} onPress={generatePassword}>
+        <Text style={style.buttonText}>Gerar Senha</Text>
+      </TouchableOpacity>
     </View>
   );
 }
 
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-}
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+const style = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#F3F3FF',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
+  logo: {
+    marginBottom: 60,
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
+  title: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    color: '#000',
   },
-  highlight: {
-    fontWeight: '700',
+  areaSlider: {
+    marginTop: 14,
+    marginBottom: 14,
+    width: '80%',
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    padding: 8,
+  },
+  button: {
+    backgroundColor: '#392de9',
+    width: '80%',
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 8,
+    marginBottom: 18,
+  },
+
+  buttonText: {
+    color: '#FFF',
+    fontSize: 20,
   },
 });
-
-export default App;
